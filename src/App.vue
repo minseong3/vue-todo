@@ -1,26 +1,45 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <TodoHeader></TodoHeader>
+    <TodoInput @add="addTodoItem"></TodoInput>
+    <TodoList></TodoList>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import TodoHeader from '@/components/TodoHeader.vue';
+import TodoInput from './components/TodoInput.vue';
+import TodoList from './components/TodoList.vue';
+import { ref } from 'vue';
 
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
+    components: {
+        TodoHeader,
+        TodoInput,
+        TodoList
+    },
+    setup() {
+        const todoItems = ref([]);
+
+        function fetchTodos() {
+            const result = [];
+            for (let i =0; i < localStorage.length; i++) {
+                const todoItem = localStorage.key(i);
+                result.push(todoItem);
+            }              
+            return result;
+        }
+        todoItems.value = fetchTodos();
+
+        function addTodoItem(todo) {
+            todoItems.value.push(todo);
+            localStorage.setItem(todo, todo);
+        }
+
+        return {todoItems, addTodoItem}
+    }
 }
+
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style lang="scss" scoped>
+
 </style>
