@@ -59,8 +59,4 @@ button {
   text-decoration: line-through;
   color: gray;
 }
-.completed {
-  text-decoration: line-through;
-  color: gray;
-}
 </style>
