@@ -1,20 +1,27 @@
 <template>
     <TodoHeader></TodoHeader>
-    <TodoInput @add="addTodoItem"></TodoInput>
-    <TodoList></TodoList>
+    <TodoClock></TodoClock>
+    <TodoInput @add="addTodoItem" @clear = "clearAllTodoItems"></TodoInput>
+    <TodoList :todoItems = "todoItems" @remove ="removeTodoItem"></TodoList>
+    <TodoFooter></TodoFooter>
 </template>
 
 <script>
 import TodoHeader from '@/components/TodoHeader.vue';
 import TodoInput from './components/TodoInput.vue';
 import TodoList from './components/TodoList.vue';
+import TodoFooter from './components/TodoFooter.vue';
 import { ref } from 'vue';
+import TodoClock from './components/TodoClock.vue';
+
 
 export default {
     components: {
         TodoHeader,
+        TodoClock,
         TodoInput,
-        TodoList
+        TodoList,
+        TodoFooter
     },
     setup() {
         const todoItems = ref([]);
@@ -34,10 +41,22 @@ export default {
             localStorage.setItem(todo, todo);
         }
 
-        return {todoItems, addTodoItem}
-    }
-}
+        function removeTodoItem(item, index) {
+            todoItems.value.splice(index, 1);
+            localStorage.removeItem(item);
+        }
 
+
+        function clearAllTodoItems() {
+            localStorage.clear(); // 로컬스토리지 비우기
+            todoItems.value = []; // todoItems 초기화
+        }
+
+
+        return {todoItems, addTodoItem, removeTodoItem, clearAllTodoItems}
+    }
+    
+}
 </script>
 
 <style lang="scss" scoped>
