@@ -2,7 +2,7 @@
     <TodoHeader></TodoHeader>
     <TodoClock></TodoClock>
     <TodoInput @add="addTodoItem" @clear = "clearAllTodoItems"></TodoInput>
-    <TodoList :todoItems = "todoItems" @remove ="removeTodoItem"></TodoList>
+    <TodoList :todoItems = "todoItems" @remove ="removeTodoItem" @complete="completeTodoItem"></TodoList>
     <TodoFooter></TodoFooter>
 </template>
 
@@ -29,21 +29,40 @@ export default {
         function fetchTodos() {
             const result = [];
             for (let i =0; i < localStorage.length; i++) {
-                const todoItem = localStorage.key(i);
+                const key = localStorage.key(i);
+                const todoItem = JSON.parse(localStorage.getItem(key)); // JSON 파싱
                 result.push(todoItem);
             }              
             return result;
         }
         todoItems.value = fetchTodos();
 
-        function addTodoItem(todo) {
-            todoItems.value.push(todo);
-            localStorage.setItem(todo, todo);
+        function addTodoItem(todoText) {
+            const newTodo = { text: todoText, completed: false }; // 객체 형태로 생성
+            todoItems.value.push(newTodo);
+            localStorage.setItem(todoText, JSON.stringify(newTodo)); // JSON 형태로 저장
+        }
+
+        function completeTodoItem(index) {
+            todoItems.value[index].completed = !todoItems.value[index].completed;
+            const updatedTodo = todoItems.value[index];
+            localStorage.setItem(updatedTodo.text, JSON.stringify(updatedTodo));
         }
 
         function removeTodoItem(item, index) {
+            // 로컬스토리지에서 키를 찾아서 삭제
+            const keyToRemove = Object.keys(localStorage).find(key => {
+                const storedItem = JSON.parse(localStorage.getItem(key));
+                return storedItem.text === item.text && storedItem.completed === item.completed;
+            });
+
+            if(keyToRemove) {
+                localStorage.removeItem(keyToRemove); // 키로 삭제
+            }
+
+            // 메모리에서도 삭제
             todoItems.value.splice(index, 1);
-            localStorage.removeItem(item);
+            
         }
 
 
@@ -53,7 +72,7 @@ export default {
         }
 
 
-        return {todoItems, addTodoItem, removeTodoItem, clearAllTodoItems}
+        return {todoItems, addTodoItem, completeTodoItem, removeTodoItem, clearAllTodoItems}
     }
     
 }
