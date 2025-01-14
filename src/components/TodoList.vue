@@ -13,7 +13,7 @@
     export default {
         props: ['todoItems'],
 
-        setup(props, context) {
+        setup(_, context) {
 
             function removeTodo(id, index) {
                 context.emit('remove', id, index);
@@ -33,7 +33,7 @@ ul {
     font-size: 30px;
     margin-bottom: 5px;
     text-align: center;
-    overflow-x: hidden;
+    /* overflow-x: hidden; */
 }
 button {
     background: linear-gradient(to right, #9fd8ff, #ff92aa);

@@ -11,7 +11,7 @@
 import { ref } from 'vue';
 
 export default {
-    setup(props, context) {
+    setup(_, context) {
         // data
         const todoInput = ref('');
 

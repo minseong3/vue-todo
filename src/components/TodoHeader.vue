@@ -10,7 +10,7 @@ h1 {
   margin: 2.5rem 0 1.5rem;
   text-align: center;
   font-family: 'establishRetrosansOTF';
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
 }
 @font-face {
     font-family: 'establishRetrosansOTF';

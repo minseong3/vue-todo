@@ -76,9 +76,9 @@ export default {
 html, body {
   margin: 0; /* 기본 마진 제거 */
   padding: 0; /* 기본 패딩 제거 */
-  overflow-x: hidden; /* x축 스크롤 제거 */
+  /* overflow-x: hidden;  */
   width: 100%; /* 전체 화면에 맞게 설정 */
-  box-sizing: border-box; /* 박스 크기 조절 방식 변경 */
+  box-sizing: border-box;
 }
 #app {
     display: grid;
