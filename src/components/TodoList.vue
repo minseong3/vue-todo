@@ -1,9 +1,9 @@
 <template>
     <ul>
-        <p class="t1" v-for="(item, index) in todoItems" :key="index">
+        <p class="t1" v-for="(item, index) in todoItems" :key="item.id">
             <span :class="{completed: item.completed}">{{ item.text }}</span>
-            <button @click="completeTodo(index)">완료</button>
-            <button @click="removeTodo(item, index)">삭제</button>
+            <button @click="completeTodo(item.id)">완료</button>
+            <button @click="removeTodo(item.id, index)">삭제</button>
         </p>
     </ul>
 </template>
@@ -15,12 +15,12 @@
 
         setup(props, context) {
 
-            function removeTodo(item, index) {
-                context.emit('remove', item, index)
+            function removeTodo(id, index) {
+                context.emit('remove', id, index);
             }
 
-            function completeTodo(index) {
-                context.emit('complete', index)
+            function completeTodo(id) {
+                context.emit('complete', id);
             }
 
             return { removeTodo, completeTodo }
@@ -33,6 +33,7 @@ ul {
     font-size: 30px;
     margin-bottom: 5px;
     text-align: center;
+    overflow-x: hidden;
 }
 button {
     background: linear-gradient(to right, #9fd8ff, #ff92aa);
@@ -56,7 +57,7 @@ button {
 }
 .t1 {font-family: 'Ownglyph_StudyHard-Rg';}
 .completed {
-  text-decoration: line-through;
-  color: gray;
+    text-decoration: line-through;
+    color: gray;
 }
 </style>

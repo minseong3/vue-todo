@@ -44,7 +44,7 @@
   .legend {
   font-family: 'establishRetrosansOTF';
   background-color: #f8f9fa;
-  padding: 20px;
+  padding: 5px;
   text-align: center;
   font-size: 20px;
   color: #555;

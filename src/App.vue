@@ -35,48 +35,28 @@ export default {
                 const todoItem = JSON.parse(localStorage.getItem(key));
                 todoItems.value.push(todoItem); // 로컬스토리지에 저장되어 있는 값들을 key 별로 가져와 todoItems 배열에 저장
             }
+            todoItems.value.sort((a, b) => a.id - b.id); // todoItems 배열 정렬
         }
         
 
         function addTodoItem(todoText) {
-            const newTodo = { text: todoText, completed: false }; // 객체 형태로 생성
-
-            let pk = 0;
-            // key 값을 pk로 지정하여 key 값이 null이 아닐 경우 존재하는 key 값이기 때문에 key 값 변경
-            while(localStorage.getItem(pk.toString()) !== null) {
-                pk++;
-            }
+            const newTodo = { id: Date.now(),text: todoText, completed: false }; // 객체 형태로 생성
 
             todoItems.value.push(newTodo);
-            localStorage.setItem(pk.toString(), JSON.stringify(newTodo)); // 로컬스토리지에 JSON 형태로 저장
+            localStorage.setItem(newTodo.id, JSON.stringify(newTodo)); // 로컬스토리지에 JSON 형태로 저장
         }
 
-        function completeTodoItem(key) {
-            const todoItem = JSON.parse(localStorage.getItem(key));
-
-            if(todoItem) {
-                todoItem.completed = !todoItem.completed;
-
-                localStorage.setItem(key, JSON.stringify(todoItem));
-
-                const index = todoItems.value.findIndex(item => item.text === todoItem.text);
-                if(index !== -1) {
-                    todoItems.value[index] = todoItem;
-                }
+        function completeTodoItem(id) {
+            const index = todoItems.value.findIndex(item => item.id === id);
+            if (index !== -1) {
+                todoItems.value[index].completed = !todoItems.value[index].completed;
+                localStorage.setItem(id, JSON.stringify(todoItems.value[index])); // ID로 저장
             }
         }
 
-        function removeTodoItem(item, index) {
-            const removeKey = Object.keys(localStorage).find(key => {
-                const storedItem = JSON.parse(localStorage.getItem(key));
-                return storedItem.text === item.text && storedItem.completed === item.completed;
-            });
-
-            if(removeKey) {
-                localStorage.removeItem(removeKey); //로컬스토리지에서 삭제
-            }
-
-            todoItems.value.splice(index, 1); //메모리에서 삭제
+        function removeTodoItem(id, index) {
+            localStorage.removeItem(id);
+            todoItems.value.splice(index, 1);
         }
 
 
@@ -92,6 +72,17 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-
+<style scoped>
+html, body {
+  margin: 0; /* 기본 마진 제거 */
+  padding: 0; /* 기본 패딩 제거 */
+  overflow-x: hidden; /* x축 스크롤 제거 */
+  width: 100%; /* 전체 화면에 맞게 설정 */
+  box-sizing: border-box; /* 박스 크기 조절 방식 변경 */
+}
+#app {
+    display: grid;
+    grid-template-columns: auto auto; /* 내용 크기에 맞게 열 크기 조정 */
+    grid-template-rows: auto auto;
+}
 </style>

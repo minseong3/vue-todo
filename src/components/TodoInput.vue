@@ -55,7 +55,7 @@ input {
     padding: 10px;
     font-size: 16px;
     margin-bottom: 10px; /* 버튼과 간격을 줌 */
-    width: 300px; /* 적당한 너비 설정 */
+    width: 250px; /* 적당한 너비 설정 */
 }
 
 .b1 {
