@@ -2,7 +2,7 @@
     <TodoHeader></TodoHeader>
     <TodoClock></TodoClock>
     <TodoInput @add="addTodoItem" @clear = "clearAllTodoItems"></TodoInput>
-    <TodoList :todoItems = "todoItems" @remove ="removeTodoItem"></TodoList>
+    <TodoList :todoItems = "todoItems" @remove ="removeTodoItem" @complete = "completeTodoItem"></TodoList>
     <TodoFooter></TodoFooter>
 </template>
 
@@ -51,10 +51,19 @@ export default {
             localStorage.setItem(pk.toString(), JSON.stringify(newTodo)); // 로컬스토리지에 JSON 형태로 저장
         }
 
-        function completeTodoItem(index) {
-            todoItems.value[index].completed = !todoItems.value[index].completed;
-            const updatedTodo = todoItems.value[index];
-            localStorage.setItem(updatedTodo.text, JSON.stringify(updatedTodo));
+        function completeTodoItem(key) {
+            const todoItem = JSON.parse(localStorage.getItem(key));
+
+            if(todoItem) {
+                todoItem.completed = !todoItem.completed;
+
+                localStorage.setItem(key, JSON.stringify(todoItem));
+
+                const index = todoItems.value.findIndex(item => item.text === todoItem.text);
+                if(index !== -1) {
+                    todoItems.value[index] = todoItem;
+                }
+            }
         }
 
         function removeTodoItem(item, index) {

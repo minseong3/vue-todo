@@ -1,7 +1,7 @@
 <template>
     <ul>
         <p class="t1" v-for="(item, index) in todoItems" :key="index">
-            <span :class="{ completed: item.completed }">{{ item.text }}</span>
+            <span :class="{completed: item.completed}">{{ item.text }}</span>
             <button @click="completeTodo(index)">완료</button>
             <button @click="removeTodo(item, index)">삭제</button>
         </p>
