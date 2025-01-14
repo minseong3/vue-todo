@@ -2,7 +2,7 @@
     <TodoHeader></TodoHeader>
     <TodoClock></TodoClock>
     <TodoInput @add="addTodoItem" @clear = "clearAllTodoItems"></TodoInput>
-    <TodoList :todoItems = "todoItems" @remove ="removeTodoItem" @complete="completeTodoItem"></TodoList>
+    <TodoList :todoItems = "todoItems" @remove ="removeTodoItem"></TodoList>
     <TodoFooter></TodoFooter>
 </template>
 
@@ -26,21 +26,29 @@ export default {
     setup() {
         const todoItems = ref([]);
 
+        fetchTodos();
+
         function fetchTodos() {
-            const result = [];
-            for (let i =0; i < localStorage.length; i++) {
+            todoItems.value = []; //  배열 초기화
+            for (let i = 0; i < localStorage.length; i++) {
                 const key = localStorage.key(i);
-                const todoItem = JSON.parse(localStorage.getItem(key)); // JSON 파싱
-                result.push(todoItem);
-            }              
-            return result;
+                const todoItem = JSON.parse(localStorage.getItem(key));
+                todoItems.value.push(todoItem); // 로컬스토리지에 저장되어 있는 값들을 key 별로 가져와 todoItems 배열에 저장
+            }
         }
-        todoItems.value = fetchTodos();
+        
 
         function addTodoItem(todoText) {
             const newTodo = { text: todoText, completed: false }; // 객체 형태로 생성
+
+            let pk = 0;
+            // key 값을 pk로 지정하여 key 값이 null이 아닐 경우 존재하는 key 값이기 때문에 key 값 변경
+            while(localStorage.getItem(pk.toString()) !== null) {
+                pk++;
+            }
+
             todoItems.value.push(newTodo);
-            localStorage.setItem(todoText, JSON.stringify(newTodo)); // JSON 형태로 저장
+            localStorage.setItem(pk.toString(), JSON.stringify(newTodo)); // 로컬스토리지에 JSON 형태로 저장
         }
 
         function completeTodoItem(index) {
@@ -50,19 +58,16 @@ export default {
         }
 
         function removeTodoItem(item, index) {
-            // 로컬스토리지에서 키를 찾아서 삭제
-            const keyToRemove = Object.keys(localStorage).find(key => {
+            const removeKey = Object.keys(localStorage).find(key => {
                 const storedItem = JSON.parse(localStorage.getItem(key));
                 return storedItem.text === item.text && storedItem.completed === item.completed;
             });
 
-            if(keyToRemove) {
-                localStorage.removeItem(keyToRemove); // 키로 삭제
+            if(removeKey) {
+                localStorage.removeItem(removeKey); //로컬스토리지에서 삭제
             }
 
-            // 메모리에서도 삭제
-            todoItems.value.splice(index, 1);
-            
+            todoItems.value.splice(index, 1); //메모리에서 삭제
         }
 
 
