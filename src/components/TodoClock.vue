@@ -6,36 +6,63 @@
 </template>
 
 <script>
+// Options API -> Composition API로 변경
+import { ref, onMounted } from 'vue';
+
 export default {
-  components: {},
-  data() {
-    return {
-      ampm: '',
-      time: '',
-      date: ''
-    }
-  },
-  created() {
-    setInterval(() => this.getNow(), 1000)
-  },
-  methods: {
-    getNow() {
-      const date = new Date()
-      // 오전, 오후(AM, PM) 표시
-      this.ampm = date.getHours() >= 12 ? 'PM' : 'AM'
+  setup() {
+    const ampm = ref('');
+    const time = ref('');
+    const date = ref('');
+
+    function getNow() {
+      const now = new Date();
       
-      // 시분초(00:00:00) 표시
-      this.time = `${String(date.getHours() % 12 || 12).padStart(2, '0')}:${String(
-        date.getMinutes()
-      ).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`
-      
-      // 년월일(yyyy-mm-dd) 표시
-      this.date = `${date.getFullYear()}-${(date.getMonth() + 1)
-        .toString()
-        .padStart(2, 0)}-${date.getDate().toString().padStart(2, 0)}`
+      ampm.value = now.getHours() >= 12 ? 'PM' : 'AM';
+
+      time.value = `${String(now.getHours() % 12 || 12).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+
+      date.value = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}`;
     }
+
+    onMounted(() => {
+      getNow();
+      setInterval(getNow, 1000);
+    });
+
+    return {ampm, time, date};
   }
 }
+// export default {
+//   components: {},
+//   data() {
+//     return {
+//       ampm: '',
+//       time: '',
+//       date: ''
+//     }
+//   },
+//   created() {
+//     setInterval(() => this.getNow(), 1000)
+//   },
+//   methods: {
+//     getNow() {
+//       const date = new Date()
+//       // 오전, 오후(AM, PM) 표시
+//       this.ampm = date.getHours() >= 12 ? 'PM' : 'AM'
+      
+//       // 시분초(00:00:00) 표시 || 쓰는 이유 : 12, 24 는 falsy한 값이기 때문
+//       this.time = `${String(date.getHours() % 12 || 12).padStart(2, '0')}:${String(
+//         date.getMinutes()
+//       ).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`
+      
+//       // 년월일(yyyy-mm-dd) 표시
+//       this.date = `${date.getFullYear()}-${(date.getMonth() + 1)
+//         .toString()
+//         .padStart(2, 0)}-${date.getDate().toString().padStart(2, 0)}`
+//     }
+//   }
+// }
 </script>
 
 <style scoped>

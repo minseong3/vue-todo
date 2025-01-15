@@ -15,7 +15,7 @@ export default {
         // data
         const todoInput = ref('');
 
-        // methods
+        // methodss
         function addTodo() {
             const todo = todoInput.value;
 
@@ -50,7 +50,7 @@ export default {
     text-align: center; /* 텍스트 중앙 정렬 */
     transform: translateX(100px);
 }
- 
+
 input {
     padding: 10px;
     font-size: 16px;
